@@ -6,7 +6,7 @@ import com.tngtech.archunit.lang.ArchRule
 import com.tngtech.archunit.library.Architectures
 
 @AnalyzeClasses(packages = ["com.cc"])
-internal class ArchitectureTest {
+class ArchitectureTest {
 
     companion object {
         private const val DOMAIN = "domain"

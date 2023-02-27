@@ -5,7 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 
-internal class RoomTest {
+class RoomTest {
 
     @Test
     fun createRoomWhenRoomNumberInvalid() {
