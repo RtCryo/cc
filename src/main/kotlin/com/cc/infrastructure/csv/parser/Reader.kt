@@ -4,13 +4,14 @@ import com.cc.domain.model.MiddleName
 import com.cc.domain.model.Person
 import com.cc.domain.model.Room
 import com.cc.domain.model.Title
+import com.cc.domain.service.DomainReader
 import org.springframework.stereotype.Service
 import java.io.InputStream
 
 @Service
-class Reader {
+class Reader: DomainReader {
 
-    fun readCsv(inputStream: InputStream): List<Room> {
+    override fun readCsv(inputStream: InputStream): List<Room> {
         val reader = inputStream.bufferedReader()
         return reader.lineSequence()
                 .map {
