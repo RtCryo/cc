@@ -23,6 +23,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.slf4j:slf4j-api:2.0.6")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+    implementation("org.springframework.boot:spring-boot-starter-validation:3.0.3")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.tngtech.archunit:archunit-junit4:1.0.1")
     testImplementation("org.assertj:assertj-core:3.24.2")
@@ -38,9 +40,6 @@ tasks.withType<KotlinCompile> {
 
 tasks.test {
     useJUnitPlatform()
-    jacoco {
-        exclude("**/*get*")
-    }
 }
 
 tasks.jacocoTestReport {
