@@ -14,10 +14,6 @@ class VirtualRepository: DomainRepository {
         rooms.clear()
     }
 
-    override fun addRoom(room: Room) {
-        rooms.add(room)
-    }
-
     override fun saveAll(rooms: Iterable<Room>) {
         this.deleteAll()
         this.rooms.addAll(rooms)
