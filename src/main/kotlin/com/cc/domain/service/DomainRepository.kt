@@ -6,8 +6,6 @@ interface DomainRepository {
 
     fun deleteAll()
 
-    fun addRoom(room: Room)
-
     fun saveAll(rooms: Iterable<Room>)
 
     fun findByRoomNumber(roomNumber: Int): Room
