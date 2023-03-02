@@ -23,8 +23,12 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.slf4j:slf4j-api:2.0.6")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("com.tngtech.archunit:archunit-junit4:1.0.1")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+    implementation("org.springframework.boot:spring-boot-starter-validation:3.0.3")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") { exclude(module = "mockito-core") }
+    testImplementation("com.ninja-squad:springmockk:4.0.0")
+    testImplementation("com.tngtech.archunit:archunit-junit5:1.0.1")
+    testImplementation("com.tngtech.archunit:archunit:1.0.1")
     testImplementation("org.assertj:assertj-core:3.24.2")
     testImplementation(kotlin("test"))
 }
@@ -38,9 +42,6 @@ tasks.withType<KotlinCompile> {
 
 tasks.test {
     useJUnitPlatform()
-    jacoco {
-        exclude("**/*get*")
-    }
 }
 
 tasks.jacocoTestReport {

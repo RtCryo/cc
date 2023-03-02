@@ -10,7 +10,7 @@ class ArchitectureTest {
 
     companion object {
         private const val DOMAIN = "domain"
-        private const val USERCASE = "usercase"
+        private const val APPLICATION = "application"
         private const val INFRASTRUCTURE = "infrastructure"
     }
 
@@ -18,8 +18,10 @@ class ArchitectureTest {
     val layerRules: ArchRule? = Architectures.layeredArchitecture()
             .consideringOnlyDependenciesInLayers()
             .layer(DOMAIN).definedBy("com.cc.domain..")
-            .layer(USERCASE).definedBy("com.cc.usercase..")
+            .layer(APPLICATION).definedBy("com.cc.application..")
             .layer(INFRASTRUCTURE).definedBy("com.cc.infrastructure..")
             .whereLayer(DOMAIN).mayNotAccessAnyLayer()
+            .whereLayer(APPLICATION).mayOnlyAccessLayers(DOMAIN)
+            .whereLayer(INFRASTRUCTURE).mayOnlyAccessLayers(APPLICATION, DOMAIN)
 }
 
