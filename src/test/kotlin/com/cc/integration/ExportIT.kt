@@ -57,6 +57,12 @@ class ExportIT(@Autowired private val mockMvc: MockMvc) {
 
     @Test
     fun exportWhenRoomNotValid() {
+        mockMvc.perform(get("/api/room/555"))
+                .andExpect(status().isBadRequest)
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("Room number is invalid: 555"))
+                .andExpect(jsonPath("$.code").value(6))
+
         mockMvc.perform(get("/api/room/55555"))
                 .andExpect(status().isBadRequest)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

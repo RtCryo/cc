@@ -40,6 +40,12 @@ class ImportIT(@Autowired private val mockMvc: MockMvc) {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("Ldap not found: Dennis Fischer pfischer)"))
                 .andExpect(jsonPath("$.code").value("4"))
+
+        mockMvc.perform(multipart("/api/import").file(createMockFile("sitzplan_with_invalid_ldap_another.csv")))
+                .andExpect(status().isBadRequest)
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("Ldap not found: Dennis Fischer (pfischer"))
+                .andExpect(jsonPath("$.code").value("4"))
     }
 
     @Test
