@@ -4,20 +4,17 @@ import com.cc.domain.model.MiddleName
 import com.cc.domain.model.Person
 import com.cc.domain.model.Title
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 import java.io.File
 import java.io.FileInputStream
 
-
+@SpringBootTest
 class ReaderTest {
 
+    @Autowired
     private lateinit var reader: Reader
-
-    @BeforeEach
-    fun setUp() {
-        reader = Reader()
-    }
 
     @Test
     fun readInputStreamWithRooms() {

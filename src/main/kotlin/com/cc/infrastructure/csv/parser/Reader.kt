@@ -4,21 +4,24 @@ import com.cc.domain.model.MiddleName
 import com.cc.domain.model.Person
 import com.cc.domain.model.Room
 import com.cc.domain.model.Title
+import com.cc.domain.service.DomainReader
+import com.cc.infrastructure.validator.Validator
 import org.springframework.stereotype.Service
 import java.io.InputStream
 
 @Service
-class Reader {
+class Reader(private val validator: Validator): DomainReader {
 
-    fun readCsv(inputStream: InputStream): List<Room> {
+    override fun readCsv(inputStream: InputStream): List<Room> {
         val reader = inputStream.bufferedReader()
-        return reader.lineSequence()
+        val rooms = reader.lineSequence()
                 .map {
                     val roomWithPersons = it.split(',')
                     val toList = roomWithPersons.subList(1, roomWithPersons.size)
                             .filter { s -> s.isNotBlank() }
                             .map { s -> s.trim() }
                             .map { person ->
+                                validator.validateLdap(person)
                                 val split = person.split(" ")
                                 val ldap = getLdap(split)
                                 val secondName = split[split.lastIndex - 1]
@@ -29,6 +32,9 @@ class Reader {
                             }.toList()
                     Room(roomNumber = roomWithPersons[0].toInt(), toList)
                 }.toList()
+        validator.validateRoom(rooms)
+        validator.validatePersons(rooms)
+        return rooms
     }
 
     private fun getFirstName(split: List<String>, title: Title?, middleName: MiddleName?): String {
