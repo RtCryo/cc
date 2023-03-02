@@ -16,7 +16,7 @@ class Import(private val applicationService: ApplicationService) {
     @ResponseStatus(HttpStatus.OK)
     fun importCsv(@RequestBody file: MultipartFile): MessageDto {
         applicationService.transformAndSaveRoomsFromStream(file.inputStream)
-        return MessageDto(message = "OK", code = 200)
+        return MessageDto(message = "OK", code = 1)
     }
 
 }

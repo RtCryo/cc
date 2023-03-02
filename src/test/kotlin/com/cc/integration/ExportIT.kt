@@ -1,5 +1,6 @@
 package com.cc.integration
 
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -16,11 +17,14 @@ import java.io.File
 @AutoConfigureMockMvc
 class ExportIT(@Autowired private val mockMvc: MockMvc) {
 
-    @Test
-    fun export() {
+    @BeforeEach
+    fun setUp() {
         mockMvc.perform(multipart("/api/import").file(createMockFile()))
                 .andExpect(status().isOk)
+    }
 
+    @Test
+    fun exportRoom() {
         mockMvc.perform(get("/api/room/1111"))
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -31,6 +35,15 @@ class ExportIT(@Autowired private val mockMvc: MockMvc) {
                 .andExpect(jsonPath("$.persons[0].middleName").value(null))
                 .andExpect(jsonPath("$.persons[0].ldap").value("dfischer"))
 
+        mockMvc.perform(get("/api/room/1102"))
+                .andExpect(status().isOk)
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.roomNumber").value("1102"))
+                .andExpect(jsonPath("$.persons").isEmpty)
+    }
+
+    @Test
+    fun exportAllRooms() {
         mockMvc.perform(get("/api/room"))
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -40,13 +53,19 @@ class ExportIT(@Autowired private val mockMvc: MockMvc) {
                 .andExpect(jsonPath("$[0].persons[0].secondName").value("Fischer"))
                 .andExpect(jsonPath("$[0].persons[0].middleName").value(null))
                 .andExpect(jsonPath("$[0].persons[0].ldap").value("dfischer"))
+    }
 
-        mockMvc.perform(get("/api/room/1102"))
-                .andExpect(status().isOk)
+    @Test
+    fun exportWhenRoomNotValid() {
+        mockMvc.perform(get("/api/room/55555"))
+                .andExpect(status().isBadRequest)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.roomNumber").value("1102"))
-                .andExpect(jsonPath("$.persons").isEmpty)
+                .andExpect(jsonPath("$.message").value("Room number is invalid: 55555"))
+                .andExpect(jsonPath("$.code").value(6))
+    }
 
+    @Test
+    fun exportWhenRoomNotFound() {
         mockMvc.perform(get("/api/room/6666"))
                 .andExpect(status().isNotFound)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

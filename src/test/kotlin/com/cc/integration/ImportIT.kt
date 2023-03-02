@@ -21,13 +21,43 @@ class ImportIT(@Autowired private val mockMvc: MockMvc) {
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("OK"))
-                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.code").value("1"))
+    }
 
+    @Test
+    fun importWhenRoomNumberInvalid() {
         mockMvc.perform(multipart("/api/import").file(createMockFile("sitzplan_with_invalid_room_number.csv")))
                 .andExpect(status().isBadRequest)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("Room number: 11115 invalid"))
                 .andExpect(jsonPath("$.code").value("4"))
+    }
+
+    @Test
+    fun importWhenLdapInvalid() {
+        mockMvc.perform(multipart("/api/import").file(createMockFile("sitzplan_with_invalid_ldap.csv")))
+                .andExpect(status().isBadRequest)
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("Ldap not found: Dennis Fischer pfischer)"))
+                .andExpect(jsonPath("$.code").value("4"))
+    }
+
+    @Test
+    fun importWhenRoomNotUnique() {
+        mockMvc.perform(multipart("/api/import").file(createMockFile("sitzplan_with_not_unique_rooms.csv")))
+                .andExpect(status().isBadRequest)
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("Rooms is not unique"))
+                .andExpect(jsonPath("$.code").value("2"))
+    }
+
+    @Test
+    fun importWhenPersonNotUnique() {
+        mockMvc.perform(multipart("/api/import").file(createMockFile("sitzplan_with_not_unique_persons.csv")))
+                .andExpect(status().isBadRequest)
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("Persons is not unique"))
+                .andExpect(jsonPath("$.code").value("3"))
     }
 
     private fun createMockFile(filename: String): MockMultipartFile {

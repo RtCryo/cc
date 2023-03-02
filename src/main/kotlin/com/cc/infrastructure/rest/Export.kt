@@ -5,15 +5,18 @@ import com.cc.application.model.RoomApp
 import com.cc.application.service.ApplicationService
 import com.cc.infrastructure.rest.dto.PersonDto
 import com.cc.infrastructure.rest.dto.RoomDto
+import com.cc.infrastructure.validator.Validator
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class Export(private val applicationService: ApplicationService) {
+class Export(private val applicationService: ApplicationService,
+             private val validator: Validator) {
 
     @GetMapping("/api/room/{roomNumber}")
     fun getRoom(@PathVariable roomNumber: Int): RoomDto {
+        validator.validateRoomNumber(roomNumber)
         return applicationService.getRoom(roomNumber).toDto()
     }
 
